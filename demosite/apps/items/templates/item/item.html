@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>Item</title>
+{% endblock %}
+
+{% block bread_crumb_navigation %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page"></li>
+            <li class="breadcrumb-item"><a href="{% url 'home_page' %}">Home Page</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'item:purchase' item.sku %}">{{item.name}}</a></li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block item_block %}
+    <div style="margin: 10px 0;text-align: center;">
+        <hr>
+        <img src="{{ item.image }}" class="img-fluid" alt="Responsive image" style="width:200px; margin: 10px 0">
+        <p>$ {{ price.price }}</p>
+        <hr>
+        <div class="col-12">
+            <form method="post" style="width: 300px;margin: 0 auto;"novalidate>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="input-div ">
+                        <label class="row-label " for="{{ field.name }}">{{ field.label }}</label>{{ field }}
+                        {% for error in field.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor%}
+                    </div>
+                {% endfor %}
+                <div class="input-div ">
+                    <button type="submit" style="padding: 10px;width: 300px;">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block customerjs %}
+{% endblock %}

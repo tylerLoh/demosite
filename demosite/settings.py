@@ -36,13 +36,18 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'vouchers.apps.VouchersConfig',
     'items.apps.ItemsConfig',
+    # 'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'multiselectfield',
 ]
+
+# custom user_model
+# AUTH_USER_MODEL
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +64,10 @@ ROOT_URLCONF = 'demosite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'demosite/templates'),
+            os.path.join(BASE_DIR, 'demosite/apps/items/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,4 +130,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/demosite/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "demosite/static/"),
+]

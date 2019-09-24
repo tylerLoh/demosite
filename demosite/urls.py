@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import include, url
+from django.urls import path
+
+from items.views import HomePageView
 
 urlpatterns = [
-    url(r'^vouchers/', include('vouchers.urls')),
-    url(r'^admin/', admin.site.urls),
+    path("", HomePageView.as_view(), name="home_page"),
+    path("site-admin/", admin.site.urls),
+    path("item/", include("items.urls")),
 ]

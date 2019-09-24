@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Home Page</title>
+{% endblock %}
+
+{% block item_product %}
+    <div style="width: 100%; margin: 30px 0 10px 0">
+        <h5 class="text-monospace" style="text-align:center">
+            Product
+        </h5>
+        <p class="border-bottom"></p>
+    </div>
+    <div class="card-columns">
+        {% for product in products %}
+            <div class="card">
+                <a href="{% url 'item:purchase' product.sku %}">
+                    <img class="card-img-top img-fluid"
+                        src="{{ product.image }}" alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    <a href="{% url 'item:purchase' product.sku %}">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block item_treatment %}
+    <div style="width: 100%; margin: 30px 0 10px 0">
+        <h5 class="text-monospace" style="text-align:center">
+            Treatment
+        </h5>
+        <p class="border-bottom"></p>
+    </div>
+    <div class="card-columns">
+        {% for treatment in treatments %}
+            <div class="card">
+                <a href="{% url 'item:purchase' treatment.sku %}">
+                    <img class="card-img-top img-fluid"
+                        src="{{ treatment.image }}" alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    <div class="card-body">
+                        <a href="{% url 'item:purchase' treatment.sku %}">
+                            <h5 class="card-title">{{ treatment.name }}</h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
