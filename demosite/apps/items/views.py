@@ -8,13 +8,12 @@ from datetime import datetime
 from . import forms
 
 class HomePageView(View):
-
 	def get(self, request):
 		all_products = Item.objects.filter(
 			item_type=ItemType.PRODUCT.value,
 			active_timestamp__lte=datetime.now(),
 			expiry_timestamp__gte=datetime.now()
-			)
+		)
 
 		all_treatments = Item.objects.filter(item_type=ItemType.TREATMENT.value)
 
@@ -28,6 +27,11 @@ class ItemView(FormView):
 	form_class = forms.PurchaseForm
 	success_url = reverse_lazy('home_page')
 
+	def get_form_kwargs(self):
+		kw = super(ItemView, self).get_form_kwargs()
+		kw['sku'] = self.kwargs['sku']
+		return kw
+
 	def get_context_data(self, **kwargs):
 		context = super(ItemView, self).get_context_data(**kwargs)
 		sku = self.kwargs['sku']
@@ -38,12 +42,15 @@ class ItemView(FormView):
 		context['form'] = form
 		context['price'] = price
 		context['item'] = item
-		
+
 		return context
 
 	def form_invalid(self, form):
-		form.save()
 		return super(ItemView, self).form_invalid(form)
 
 	def form_valid(self, form):
+		sku = self.kwargs['sku']
+		item = Item.objects.get(sku=sku)
+		form.save(item)
+
 		return super(ItemView, self).form_valid(form)

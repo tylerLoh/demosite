@@ -3,42 +3,122 @@
 
 
 {% block title %}
-    <title>Item</title>
+	<title>Item</title>
 {% endblock %}
 
 {% block bread_crumb_navigation %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page"></li>
-            <li class="breadcrumb-item"><a href="{% url 'home_page' %}">Home Page</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'item:purchase' item.sku %}">{{item.name}}</a></li>
-        </ol>
-    </nav>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item active" aria-current="page"></li>
+			<li class="breadcrumb-item"><a href="{% url 'home_page' %}">Home Page</a></li>
+			<li class="breadcrumb-item"><a href="{% url 'item:purchase' item.sku %}">{{item.name}}</a></li>
+		</ol>
+	</nav>
 {% endblock %}
 
 {% block item_block %}
-    <div style="margin: 10px 0;text-align: center;">
-        <hr>
-        <img src="{{ item.image }}" class="img-fluid" alt="Responsive image" style="width:200px; margin: 10px 0">
-        <p>$ {{ price.price }}</p>
-        <hr>
-        <div class="col-12">
-            <form method="post" style="width: 300px;margin: 0 auto;"novalidate>
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="input-div ">
-                        <label class="row-label " for="{{ field.name }}">{{ field.label }}</label>{{ field }}
-                        {% for error in field.errors %}
-                            <div class="error">{{ error }}</div>
-                        {% endfor%}
-                    </div>
-                {% endfor %}
-                <div class="input-div ">
-                    <button type="submit" style="padding: 10px;width: 300px;">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
+	<div style="margin: 10px 0;text-align: center;">
+		<hr>
+		<img src="{{ item.image }}" class="img-fluid" alt="Responsive image" style="width:200px; margin: 10px 0">
+		<p>$ {{ price.price }}</p>
+		<hr>
+		<div class="col-12">
+			<form method="post" style="width: 300px;margin: 0 auto;"novalidate>
+				{% csrf_token %}
+				{% for field in form %}
+					<div class="input-div">
+						<label class="row-label" for="{{ field.name }}">{{ field.label }}</label>{{ field }}
+						{% for error in field.errors %}
+							<div class="error" id="{{ field.name }}_error">{{ error }}</div>
+						{% endfor%}
+					</div>
+				{% endfor %}
+				<div class="input-div" style="display:flex;">
+					<label class="row-label">Discount </label>
+					<div id="discount" style="text-align: right;width: 180px;">0.00</div>
+				</div>
+				<div class="input-div" style="display:flex;">
+					<label class="row-label">Sub total ($)</label>
+					<div id="total" style="text-align: right;width: 180px;">0.00</div>
+				</div>
+				<div class="input-div">
+					<button type="submit" style="padding: 10px;width: 300px;">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}
-{% block customerjs %}
+{% block customjs %}
+<script> 
+	$(document).ready(function () {
+		function recalculateDiscount(type, value, total) {
+			if(type == '%') {
+				discountTotal = (value/100) * total;
+			} else if(type == '$') {
+				discountTotal = total < value ? value : total;
+			} else {
+				discountTotal = 0;
+			}
+			return discountTotal;
+		}
+		let $voucher = $('#id_voucher');
+		let $quantity = $('#id_quantity');
+		let $total = $('#total');
+		let $discount = $('#discount');
+		let subTotal = parseFloat($quantity.val() * '{{ price.price }}');
+		let discountTotal = 0;
+		let discountValue = 0;
+		let discountType = null;
+
+		$total.html(subTotal.toFixed(2));
+
+		$quantity.on('keyup', function() {
+			let qty = $(this).val();
+			subTotal = parseFloat(qty * '{{ price.price }}');
+			discountTotal = recalculateDiscount(discountType, discountValue, subTotal)
+			subTotal = subTotal - discountTotal < 0 ? 0 : subTotal - discountTotal;
+
+			$discount.html(discountTotal.toFixed(2));
+			$total.html(subTotal.toFixed(2));
+		});
+		let prevCode = null;
+		$voucher.on('keyup', function() {
+			let voucher = $(this).val();
+			if(voucher.length == 10 & prevCode != voucher) {
+				prevCode = voucher;
+				$.ajax({
+					cache: false,
+					type: "POST",
+					data: {
+						"code": voucher,
+						"itemType": "{{ item.item_type }}",
+					},
+					url: "{% url 'voucher:verify_voucher' %}",
+					beforeSend: function (xhr, settings) {
+						xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+					},
+					success: function (data) {
+						if (data.error === null) {
+							$('#voucher_error').remove();
+							let voucher = JSON.parse(data.voucher)[0].fields;
+							discountType = voucher.discount_type;
+							discountValue = voucher.discount_value;
+						} 
+						else {
+							discountType = null;
+							discountValue = 0;
+							let $error = $('#voucher_error');
+							if ($error.length) {
+								$error.html(data.error);
+							} else {
+								$voucher.parent().append('<div class="error" id="voucher_error">'+data.error+'</div>');
+							}
+						}
+						$quantity.trigger('keyup');
+					}
+				});
+			}
+		});
+	})
+</script>
 {% endblock %}
