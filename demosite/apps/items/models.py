@@ -19,7 +19,7 @@ class Item(models.Model):
 		)])
 	name = models.CharField(max_length=25, unique=True, blank=False, null=False)
 	item_type = models.IntegerField(choices=TYPE_CHOICES, blank=False, null=False)
-	status = models.BooleanField(blank=False, null=False)
+	status = models.BooleanField(blank=False, null=False, default=True)
 	image_hash = models.CharField(max_length=32, null=True) 
 	active_timestamp = models.DateTimeField(blank=False, null=False)
 	expiry_timestamp = models.DateTimeField(blank=False, null=False)
