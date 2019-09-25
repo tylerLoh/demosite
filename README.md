@@ -2,7 +2,7 @@
 python 3.7 Django 2.2.5 Demosite
 indent = tab [4space]
 
-### PREREQUSITE
+### PREREQUISITE
 1) pip install -r requirements.txt
 2) python manage.py makemigrations items
 3) python manage.py makemigrations vouchers
