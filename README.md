@@ -12,6 +12,8 @@ indent = tab [4space]
 6) python manage.py create_items 10
 7) python manage.py runserver
 
+8) sample voucher code = TREATM00001, PRODU00001
+
 ### TODO
 1) add Admin.FormView validation for
    * timestamp validation for all Model
