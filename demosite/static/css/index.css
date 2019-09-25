@@ -1,4 +1,3 @@
-/*一些自定义的扩展样式*/
 
 /* Stackoverflow preview fix, please ignore */
 .navbar-nav {
@@ -39,38 +38,10 @@ a:hover {
     text-decoration: none;
 }
 
-/*默认样式，主要是position:fixed实现屏幕绝对定位*/
-#gotoTop {
-    display: none;
-    position: fixed;
-    top: 75%;
-    left: 50%;
-    cursor: pointer;
-    margin-top: -50px;
-    margin-left: 520px;
-    width: 48px;
-    height: 48px;
-    background: url(../media/image/to_top_1.png) 0 0 no-repeat;
-}
-
-/*用CSS表达式(expression)来实现ie6下position:fixed效果*/
-#gotoTop {
-    _position: absolute;
-    _top: expression(documentElement.scrollTop + documentElement.clientHeight * 3/4 + "px")
-}
-
-/*鼠标进入的反馈效果*/
-#gotoTop:hover {
-    background: url(../media/image/to_top_2.png) 0 0 no-repeat;
-}
-
-/*个人中心自动弹出，及消息图标变换*/
-/*取消下拉菜单的三角符号*/
 nav .dropdown-toggle::after {
     display: none;
 }
 
-/*鼠标悬停自动弹出*/
 nav.navbar li.dropdown.hover:hover > div.dropdown-menu {
     display: block;
 }
@@ -90,7 +61,6 @@ nav.navbar li.dropdown.hover a.dropdown-toggle > img.hover:hover {
         box-shadow: 0 0 15px tomato;
     }
 }
-
 
 li.nav-item button {
     width: 120px;
