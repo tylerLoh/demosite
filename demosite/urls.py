@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import include, url
 from django.urls import path
+from django.conf import settings
 
 from items.views import HomePageView
 
@@ -25,3 +26,10 @@ urlpatterns = [
     path("item/", include("items.urls")),
     path("voucher/", include("vouchers.urls")),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+    SHOW_TOOLBAR_CALLBACK = True
