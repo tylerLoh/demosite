@@ -2,7 +2,8 @@
 python 3.7 Django 2.2.5 Demosite
 indent = tab [4space]
 
-### PREREQUSITE
+### PREREQUISITE
+* Create superusers for admin panel
 1) pip install -r requirements.txt
 2) python manage.py makemigrations items
 3) python manage.py makemigrations vouchers
@@ -10,6 +11,8 @@ indent = tab [4space]
 5) python manage.py create_vouchers
 6) python manage.py create_items 10
 7) python manage.py runserver
+
+8) sample voucher code = TREATM00001, PRODU00001
 
 ### TODO
 1) add Admin.FormView validation for
