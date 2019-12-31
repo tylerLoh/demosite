@@ -4,8 +4,12 @@
       <w>demosite</w>
       <w>identicon</w>
       <w>kuala</w>
+      <w>lconf</w>
       <w>lumpur</w>
       <w>multiselectfield</w>
+      <w>pythonpath</w>
+      <w>pytz</w>
+      <w>sqlparse</w>
     </words>
   </dictionary>
 </component>

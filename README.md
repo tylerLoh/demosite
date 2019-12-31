@@ -3,7 +3,11 @@ Workout for basic Django web framework
 
 ### Dependencies
 python > 3.6
-Django 3.0.1
+Django 2.2.8
+
+### Docstring
+
+
 
 ### PREREQUISITE
 * Create superusers for admin panel

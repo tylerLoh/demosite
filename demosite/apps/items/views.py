@@ -29,7 +29,14 @@ class ItemView(FormView):
     form_class = forms.PurchaseForm
     success_url = reverse_lazy('home_page')
 
+    # override method to mod/add new kwargs
     def get_form_kwargs(self):
+        """
+
+        :return:
+        kwargs
+            to add sku keyword args for form_class object
+        """
         kw = super(ItemView, self).get_form_kwargs()
         kw['sku'] = self.kwargs['sku']
         return kw

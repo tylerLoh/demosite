@@ -62,7 +62,6 @@ MIDDLEWARE = [
 
 INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
 
-DEBUG = True
 ROOT_URLCONF = 'demosite.urls'
 
 TEMPLATES = [

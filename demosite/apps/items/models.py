@@ -39,7 +39,7 @@ class Item(models.Model):
     # generate some image for item
     def image(self, size=100, default="identicon", rating="g"):
         url = "https://secure.gravatar.com/avatar"
-        hash_call = self.image_hash()
+        hash_call = self.hash_image()
         return f"{url}/{hash_call}?s={size}&d={default}&r={rating}"
 
     def __repr__(self):
