@@ -1,6 +1,9 @@
 # demosite
-python 3.7 Django 2.2.5 Demosite
-indent = tab [4space]
+Workout for basic Django web framework
+
+### Dependencies
+python > 3.6
+Django 3.0.1
 
 ### PREREQUISITE
 * Create superusers for admin panel
@@ -11,7 +14,6 @@ indent = tab [4space]
 5) python manage.py create_vouchers
 6) python manage.py create_items 10
 7) python manage.py runserver
-
 8) sample voucher code = TREATM00001, PRODU00001
 
 ### TODO
