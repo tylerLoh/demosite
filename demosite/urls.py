@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.conf.urls import url, handler404, static
+from django.conf.urls import url, handler404
 from django.urls import path, include
 from django.conf import settings
 
@@ -27,11 +27,11 @@ urlpatterns = [
     path('voucher/', include("vouchers.urls")),
 ]
 
-# handler404
+# handler404 can be set using views
 
+# If in DEBUG, enable Django debug_toolbar
 if settings.DEBUG:
     import debug_toolbar
-
     urlpatterns = [
                       url(r'^__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns

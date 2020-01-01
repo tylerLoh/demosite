@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '8dve$i2icf$b20e1*&rk6g^=am$f$x_s!_f652ey=hel=sw14_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get('DJANGO_DEBUG', None):
+if os.environ.get('DJANGO_DEBUG'):
     print('DEBUG Is Disabled')
     DEBUG = False
 else:
@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'demosite.utils.context_processors.template_variable'
             ],
         },
     },

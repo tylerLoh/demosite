@@ -116,3 +116,11 @@ h3 {
     color: red;
     text-align: right;
 }
+
+.not-found {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    font-size: 8em;
+    padding-top: 0.5em;
+}
