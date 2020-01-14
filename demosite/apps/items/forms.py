@@ -1,3 +1,8 @@
+"""Base Form for Purchase page
+
+Include collection of field, with all associated field type
+"""
+
 from django import forms
 from django.core.validators import RegexValidator, MinValueValidator, \
     MaxValueValidator
@@ -7,6 +12,20 @@ from datetime import datetime
 
 
 class PurchaseForm(forms.Form):
+    """BaseForm class
+
+    Attributes
+    ----------
+    max_message: str
+        validation msg for max purchase amount
+    min_message: str
+        validation msg for min purchase
+    quantity:  Interger Field
+        min: 1
+        max: 100
+    voucher: Char Field
+        max: 10 (Voucher model guid length)
+    """
     max_message = "Max quantity for purchase 100"
     min_message = "Min quality for purchase 1"
 
@@ -23,10 +42,17 @@ class PurchaseForm(forms.Form):
                               required=False)
 
     def __init__(self, *args, **kwargs):
+        # pop sku to self instance, first instance doesn't hold sku key
         self.sku = kwargs.pop('sku')
         super(PurchaseForm, self).__init__(*args, **kwargs)
 
     def clean(self):
+        """Validator hook doing any extra form-wide cleaning
+
+        Returns
+        -------
+        Field cleaned data
+        """
         cleaned_data = super(PurchaseForm, self).clean()
         cleaned_quantity = cleaned_data.get('quantity')
         cleaned_voucher = cleaned_data.get('voucher')
@@ -52,6 +78,16 @@ class PurchaseForm(forms.Form):
         return cleaned_data
 
     def save(self, item):
+        """Form save flow design for Voucher model
+
+        If purchased is with voucher, it will save redeem count for particular
+        voucher code
+
+        Parameters
+        ----------
+        item: Item model object
+        """
+
         cleaned_data = self.cleaned_data
         cleaned_voucher = cleaned_data.get('voucher')
 

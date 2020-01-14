@@ -1,3 +1,11 @@
+"""Model design for Item and Price chain
+
+1) Each Item can have many different Price (one-to-many).
+2) Use timestamp to control current running price, which means price can
+pre-define
+
+"""
+
 from django.db import models
 from model_utils import Choices
 from django.core.validators import RegexValidator, MinValueValidator
@@ -6,12 +14,30 @@ from decimal import Decimal
 import hashlib
 from random import randrange
 
-TYPE_CHOICES = []
-for d in ItemType:
-    TYPE_CHOICES += Choices((d.value, d.name))
+# Choices class for Interger Field
+TYPE_CHOICES = [Choices((d.value, d.name)) for d in ItemType]
 
 
 class Item(models.Model):
+    """Item model design
+
+    Parameters
+    ----------
+    sku: Char Field
+        Unique ascii & number max 8 length sku code
+    name: Char Field
+        Name of the item
+    item_type: Interger Field
+        Only allow single item type
+    status: Boolean
+        Activation status
+    image_hash: hexadecimal digits
+        Chain hash_image method to generate image hash string for img callback
+    active_timestamp: DateTime
+        Created/Show timestamp, active_timestamp < now < expiry_timestamp
+    expiry_timestamp:
+        Expired timestamp, will hide from views
+    """
     sku = models.CharField(max_length=8, unique=True, blank=False, null=False,
                            validators=[RegexValidator(
                                r'^[a-zA-Z0-9]+$',
@@ -32,12 +58,13 @@ class Item(models.Model):
             self.image_hash = self.hash_image()
 
     def hash_image(self):
+        # hash using sku(unique), hash image string will be unique too
         return hashlib.md5(
             self.name.lower().encode('utf-8') + self.sku.lower().encode(
                 'utf-8')).hexdigest()
 
-    # generate some image for item
     def image(self, size=100, default="identicon", rating="g"):
+        # generate image from api for item using hash string
         url = "https://secure.gravatar.com/avatar"
         hash_call = self.hash_image()
         return f"{url}/{hash_call}?s={size}&d={default}&r={rating}"
@@ -47,6 +74,16 @@ class Item(models.Model):
 
 
 class Price(models.Model):
+    """Price model design flow
+
+    Attributes
+    ----------
+    item: Foreign Key
+    price: Decimal
+        Actual price value in two decimal point
+    effective_timestamp: DateTime
+        Effective selling price
+    """
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     price = models.DecimalField(blank=False, null=False, decimal_places=2,
                                 max_digits=6,
@@ -57,4 +94,4 @@ class Price(models.Model):
         super(Price, self).__init__(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.item.sku} {self.price:.2f}"
+        return f"{self.__class__.__name__} {self.item.sku} {self.price:.2f}"

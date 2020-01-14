@@ -34,4 +34,3 @@ class DiscountType(Enum):
     """
     PERCENTAGE = '%'
     DOLLAR = '$'
-
