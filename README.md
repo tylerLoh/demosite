@@ -27,6 +27,5 @@ python manage.py test vouchers
 - [x] Add docstring
 - [x] Add respond 404, 400 page
 - [x] Add unittest for vouchers redemption
-- [] 
-- [] Add advance testing
+- [] Add View and advance testing (Selenium)
 - [] Custom ModelAdmin view with timestamp validation
