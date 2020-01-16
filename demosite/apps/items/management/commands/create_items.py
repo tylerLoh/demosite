@@ -4,11 +4,11 @@ This command allows user to create sample data for Item and Price Model.
     python manage.py create_items [int]
 """
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 from items.models import Item, Price
 from demosite.utils.class_define import ItemType
 from random import randint, uniform
-from datetime import datetime
-from pytz import timezone
+from datetime import timedelta
 
 
 class Command(BaseCommand):
@@ -36,6 +36,7 @@ class Command(BaseCommand):
 
         Eg. For total = 10 will create 10 sample Item data into db
         """
+        current_time = timezone.now()
         for x in ItemType:
             prefix = x.name[:1]
             for i in range(0, kwargs['total']):
@@ -43,21 +44,14 @@ class Command(BaseCommand):
                 item.sku = prefix + str(randint(1000000, 9999999))
                 item.name = x.name[:3] + str(randint(1, 99909990))
                 item.item_type = x.value
-                item.active_timestamp = datetime(2019, 1, 1, 0, 0, 0,
-                                                 tzinfo=timezone(
-                                                     "Asia/Kuala_Lumpur"))
-                item.expiry_timestamp = datetime(2020, 1, 1, 0, 0, 0,
-                                                 tzinfo=timezone(
-                                                     "Asia/Kuala_Lumpur"))
+                item.active_timestamp = current_time
+                item.expiry_timestamp = current_time + timedelta(days=5)
 
                 item.save()
 
                 price = Price()
                 price.item = item
                 price.price = uniform(10.00, 200.00)
-                price.effective_timestamp = datetime(2019, 1, 1, 0, 0,
-                                                     0,
-                                                     tzinfo=timezone(
-                                                         "Asia/Kuala_Lumpur"))
+                price.effective_timestamp = current_time - timedelta(days=10)
 
                 price.save()

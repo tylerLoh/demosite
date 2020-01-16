@@ -17,15 +17,16 @@ NumPy/SciPy
 5) python manage.py create_vouchers
 6) python manage.py create_items 10
 7) python manage.py runserver
-8) sample voucher code = TREATM00001, PRODU00001
+8) sample voucher code = TREAT00001, PRODU00001
 
 ### TEST
 python manage.py test vouchers
 
 ### TODO
+- [x] Add Django Debug Toolbars
 - [x] Restructure follow PEP8 standard
 - [x] Add docstring
 - [x] Add respond 404, 400 page
 - [x] Add unittest for vouchers redemption
-- [] Add View and advance testing (Selenium)
+- [] Add view test and advance testing (Selenium)
 - [] Custom ModelAdmin view with timestamp validation

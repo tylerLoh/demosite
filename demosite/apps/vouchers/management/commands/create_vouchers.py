@@ -5,11 +5,11 @@ This command allows user to create sample data for Voucher
 """
 
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 from django.db import IntegrityError
 from vouchers.models import Voucher
 from demosite.utils.class_define import ItemType, DiscountType
-from datetime import datetime
-from pytz import timezone
+from datetime import timedelta
 
 
 class Command(BaseCommand):
@@ -29,7 +29,7 @@ class Command(BaseCommand):
         Eg. 2 Discount Type and 3 Item Type
         N * K, which means each unique item type will have 2 diff voucher type
         """
-
+        current_time = timezone.now()
         for discount in DiscountType:
             count = 1
             for item in ItemType:
@@ -41,16 +41,8 @@ class Command(BaseCommand):
                         10 if discount.value == '%' else 30)
                     voucher.eligible_type = str(item.value)
                     voucher.copied = 2
-                    voucher.active_timestamp = datetime(2019, 1, 1, 0,
-                                                        0, 0,
-                                                        tzinfo=timezone(
-                                                            "Asia/Kuala_Lumpur")
-                                                        )
-                    voucher.expiry_timestamp = datetime(2020, 1, 1, 0,
-                                                        0, 0,
-                                                        tzinfo=timezone(
-                                                            "Asia/Kuala_Lumpur")
-                                                        )
+                    voucher.active_timestamp = current_time - timedelta(days=10)
+                    voucher.expiry_timestamp = current_time + timedelta(days=10)
 
                     voucher.save()
                     count = count + 1
