@@ -1,15 +1,21 @@
+"""Model design for Vouchers
+
+* Currently contain two diff type of voucher $ | %
+"""
+
 from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator
 from model_utils import Choices
 from items.models import Item
 from multiselectfield import MultiSelectField
 from demosite.utils import DiscountType, ItemType
+from django.utils import timezone
 
-DIS_CHOICES = []
+DIS_CHOICES = Choices()
 for d in DiscountType:
     DIS_CHOICES += Choices(d.value)
 
-ITEM_CHOICES = []
+ITEM_CHOICES = Choices()
 ITEM_SUM = 0
 for i in ItemType:
     ITEM_SUM += i.value
@@ -23,9 +29,27 @@ class PatchedMultiSelectField(MultiSelectField):
 
 
 class Voucher(models.Model):
+    """Voucher class design
+
+    Parameters
+    ----------
+    code: Char field, length=10, ascii or digit
+        Voucher code
+    discount_type: Char field, length=1, % OR $
+        Discount type for voucher
+    discount_value: Float, decimal=2, min=0.01
+        Percentage discount for % sign, max=100
+        Dollar discount for $ sign
+    eligible_type: Multi select box
+        Determine voucher only eligible with what item type
+    copied: Positive integer
+        Redeemable count of particular voucher
+    active_timestamp: Datetime
+        Voucher valid start date
+    expiry_timestamp: Datetime
+        Voucher end date
     """
-    Redemption timestamp must between active and expiry
-    """
+
     code = models.CharField(
         max_length=10,
         unique=True,
@@ -63,22 +87,48 @@ class Voucher(models.Model):
         self.code = self.code.upper()
 
     def verify_eligible_type(self, compare):
+        """
+
+        Parameters
+        ----------
+        compare: str
+            compare item type with voucher eligible type
+        Returns
+        -------
+        Boolean
+        """
         return str(compare) in set(self.eligible_type)
 
     def verify_max_redeem(self):
+        # Verify is voucher fully utilized
         return self.copied > self.redeem_set.all().count()
+
+    def verify_is_expired(self):
+        # Verify is voucher due
+        return self.expiry_timestamp <= timezone.now()
 
     @staticmethod
     def verify_is_voucher(code):
+        """Verify if is valid voucher
+
+        Parameters
+        ----------
+        code: str
+            Metadata voucher code
+        Returns
+        -------
+        Voucher model object | None
+        """
         try:
-            voucher = Voucher.objects.get(code=code.upper())
+            voucher = Voucher.objects.get(code=code.upper(),
+                                          active_timestamp__lte=timezone.now())
         except Voucher.DoesNotExist:
             voucher = None
 
         return voucher
 
     def __str__(self):
-        return '%s' % (self.code)
+        return f"{self.__class__.__name__}({self.code})"
 
 
 class Redeem(models.Model):

@@ -19,10 +19,14 @@ NumPy/SciPy
 7) python manage.py runserver
 8) sample voucher code = TREATM00001, PRODU00001
 
+### TEST
+python manage.py test vouchers
+
 ### TODO
-- [] Restructure follow PEP8 standard
-- [] Add Admin.FormView validation for
-   - [] Timestamp validation for all Model
-   - [] Voucher type discount for % >=1 AND <=100
+- [x] Restructure follow PEP8 standard
+- [x] Add docstring
 - [x] Add respond 404, 400 page
-- [] Add test case for vouchers redemption with all verify_ method
+- [x] Add unittest for vouchers redemption
+- [] 
+- [] Add advance testing
+- [] Custom ModelAdmin view with timestamp validation

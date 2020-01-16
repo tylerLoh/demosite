@@ -10,7 +10,7 @@ from django.views.generic.base import View
 from django.views.generic.edit import FormView
 from items.models import Item, Price
 from demosite.utils import ItemType
-from datetime import datetime
+from django.utils import timezone
 from . import forms
 
 
@@ -20,7 +20,6 @@ class HomePageView(View):
     Landing page will be always is get request
     """
 
-    @staticmethod
     def get(self, request):
         """ handle get request method from view
 
@@ -32,12 +31,16 @@ class HomePageView(View):
         # load valid products
         all_products = Item.objects.filter(
             item_type=ItemType.PRODUCT.value,
-            active_timestamp__lte=datetime.now(),
-            expiry_timestamp__gte=datetime.now()
+            active_timestamp__lte=timezone.now(),
+            expiry_timestamp__gte=timezone.now()
         )
 
         # load valid treatments
-        all_treatments = Item.objects.filter(item_type=ItemType.TREATMENT.value)
+        all_treatments = Item.objects.filter(
+            item_type=ItemType.TREATMENT.value,
+            active_timestamp__lte=timezone.now(),
+            expiry_timestamp__gte=timezone.now()
+        )
 
         return render(request, 'home_page.html', {
             "products": all_products,

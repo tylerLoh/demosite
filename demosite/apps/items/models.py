@@ -1,7 +1,7 @@
 """Model design for Item and Price chain
 
-1) Each Item can have many different Price (one-to-many).
-2) Use timestamp to control current running price, which means price can
+* Each Item can have many different Price (one-to-many).
+* Use timestamp to control current running price, which means price can
 pre-define
 
 """
@@ -14,8 +14,11 @@ from decimal import Decimal
 import hashlib
 from random import randrange
 
-# Choices class for Interger Field
-TYPE_CHOICES = [Choices((d.value, d.name)) for d in ItemType]
+# Choices class for model Field
+
+TYPE_CHOICES = Choices()
+for item in ItemType:
+    TYPE_CHOICES += Choices((item.value, item.name))
 
 
 class Item(models.Model):
@@ -38,6 +41,7 @@ class Item(models.Model):
     expiry_timestamp:
         Expired timestamp, will hide from views
     """
+
     sku = models.CharField(max_length=8, unique=True, blank=False, null=False,
                            validators=[RegexValidator(
                                r'^[a-zA-Z0-9]+$',
@@ -84,6 +88,7 @@ class Price(models.Model):
     effective_timestamp: DateTime
         Effective selling price
     """
+
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     price = models.DecimalField(blank=False, null=False, decimal_places=2,
                                 max_digits=6,
